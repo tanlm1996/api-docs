@@ -59,5 +59,6 @@ x-tagGroups:
       - user
   - name: Models
     tags:
-paths:
+      - rofi
+# paths:
   
