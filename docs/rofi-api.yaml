@@ -19,14 +19,14 @@ info:
     <SecurityDefinitions />
 
   version: 1.0.0
-  title: Swagger ROFI Platform
+  title: ROFI Platform
   termsOfService: 'http://swagger.io/terms/'
   contact:
     name: API Support
     email: apiteam@swagger.io
     url: https://github.com/Redocly/redoc
   x-logo:
-    url: 'https://redocly.github.io/redoc/petstore-logo.png'
+    url: 'https://rofi-games-cdn.b-cdn.net/platform/logo/logo-large.jpg'
     altText: Petstore logo
   license:
     name: Apache 2.0
