@@ -1537,270 +1537,271 @@
         }
       }
     },
-    "components": {
-      "schemas": {
-        "SimpleBalance": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "example": "64547cb27a70d1be7c338f06"
-            },
-            "balance": {
-              "type": "number",
-              "example": 100
-            },
-            "symbol": {
-              "type": "string",
-              "example": "IDL"
-            }
-          }
-        },
-        "Balance": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "example": "64547cb27a70d1be7c338f06"
-            },
-            "balance": {
-              "type": "number",
-              "example": 100
-            },
-            "symbol": {
-              "type": "string",
-              "example": "IDL"
-            },
-            "userId": {
-              "type": "string",
-              "format": "uuid",
-              "example": "d70d6443-de2f-4f0e-a023-4dbcbe056777"
-            },
-            "createdAt": {
-              "type": "string",
-              "format": "date"
-            },
-            "updatedAt": {
-              "type": "string",
-              "format": "date"
-            }
-          }
-        },
-        "Transaction": {
-          "type": "object",
-          "properties": {
-            "userId": {
-              "type": "string",
-              "description": "ROFI account ID"
-            },
-            "appId": {
-              "type": "string",
-              "example": "dapp_be",
-              "description": "Internal app id"
-            },
-            "transactionType": {
-              "type": "string",
-              "enum": [
-                "deposit",
-                "refund",
-                "earn_in_game",
-                "reward_in_game",
-                "buy_item_in_game",
-                "revert"
-              ]
-            },
-            "symbol": {
-              "type": "string"
-            },
-            "amount": {
-              "type": "number",
-              "example": 100
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "Success",
-                "Pending",
-                "Fail"
-              ]
-            },
-            "oldBalance": {
-              "type": "number"
-            },
-            "newBalance": {
-              "type": "number"
-            },
-            "metadata": {
-              "type": "object"
-            },
-            "createdBy": {
-              "type": "string"
-            },
-            "_id": {
-              "type": "string"
-            },
-            "createdAt": {
-              "type": "string",
-              "format": "date"
-            }
+
+  },
+  "components": {
+    "schemas": {
+      "SimpleBalance": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64547cb27a70d1be7c338f06"
           },
-          "example": {
-            "_id": "6454899d17f6f52c8895f0f8",
-            "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
-            "appId": "dapp_be",
-            "transactionType": "deposit",
-            "symbol": "IDL",
-            "status": "Success",
-            "amount": 100,
-            "oldBalance": 997600,
-            "newBalance": 997700,
-            "metadata": {
-              "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
-            },
-            "createdAt": "2023-05-05T04:44:13.361Z"
+          "balance": {
+            "type": "number",
+            "example": 100
+          },
+          "symbol": {
+            "type": "string",
+            "example": "IDL"
+          }
+        }
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64547cb27a70d1be7c338f06"
+          },
+          "balance": {
+            "type": "number",
+            "example": 100
+          },
+          "symbol": {
+            "type": "string",
+            "example": "IDL"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d70d6443-de2f-4f0e-a023-4dbcbe056777"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "ROFI account ID"
+          },
+          "appId": {
+            "type": "string",
+            "example": "dapp_be",
+            "description": "Internal app id"
+          },
+          "transactionType": {
+            "type": "string",
+            "enum": [
+              "deposit",
+              "refund",
+              "earn_in_game",
+              "reward_in_game",
+              "buy_item_in_game",
+              "revert"
+            ]
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "example": 100
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Success",
+              "Pending",
+              "Fail"
+            ]
+          },
+          "oldBalance": {
+            "type": "number"
+          },
+          "newBalance": {
+            "type": "number"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
           }
         },
-        "Paginator": {
-          "type": "object",
-          "properties": {
-            "total": {
-              "type": "integer",
-              "example": 1
-            },
-            "limit": {
-              "type": "integer",
-              "example": 10
-            },
-            "totalPages": {
-              "type": "integer",
-              "example": 1
-            },
-            "currentPage": {
-              "type": "integer",
-              "nullable": true,
-              "example": null
-            },
-            "slNo": {
-              "type": "number",
-              "nullable": true,
-              "example": null
-            },
-            "hasPrevPage": {
-              "type": "boolean",
-              "example": false
-            },
-            "hasNextPage": {
-              "type": "boolean",
-              "example": false
-            },
-            "prev": {
-              "type": "integer",
-              "nullable": true,
-              "example": null
-            },
-            "next": {
-              "type": "integer",
-              "nullable": true,
-              "example": null
-            }
+        "example": {
+          "_id": "6454899d17f6f52c8895f0f8",
+          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+          "appId": "dapp_be",
+          "transactionType": "deposit",
+          "symbol": "IDL",
+          "status": "Success",
+          "amount": 100,
+          "oldBalance": 997600,
+          "newBalance": 997700,
+          "metadata": {
+            "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
+          },
+          "createdAt": "2023-05-05T04:44:13.361Z"
+        }
+      },
+      "Paginator": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "example": 10
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "integer",
+            "nullable": true,
+            "example": null
+          },
+          "slNo": {
+            "type": "number",
+            "nullable": true,
+            "example": null
+          },
+          "hasPrevPage": {
+            "type": "boolean",
+            "example": false
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "example": false
+          },
+          "prev": {
+            "type": "integer",
+            "nullable": true,
+            "example": null
+          },
+          "next": {
+            "type": "integer",
+            "nullable": true,
+            "example": null
           }
-        },
-        "Error": {
-          "type": "object",
-          "properties": {
-            "code": {
-              "type": "number"
-            },
-            "message": {
-              "type": "string"
-            },
-            "data": {
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
               "type": "object",
-              "nullable": true
-            },
-            "errors": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  },
-                  "msg": {
-                    "type": "string"
-                  },
-                  "param": {
-                    "type": "string"
-                  },
-                  "location": {
-                    "type": "string"
-                  }
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "msg": {
+                  "type": "string"
+                },
+                "param": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
                 }
               }
             }
           }
         }
-      },
-      "responses": {
-        "Unauthorized": {
-          "description": "Unauthorized",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Error"
-              },
-              "example": {
-                "code": 401,
-                "message": "Please authenticate"
-              }
-            }
-          }
-        },
-        "Forbidden": {
-          "description": "Forbidden",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Error"
-              },
-              "example": {
-                "code": 403,
-                "message": "Forbidden"
-              }
-            }
-          }
-        },
-        "NotFound": {
-          "description": "Not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Error"
-              },
-              "example": {
-                "code": 404,
-                "message": "Not found"
-              }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": 401,
+              "message": "Please authenticate"
             }
           }
         }
       },
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        },
-        "accessKey": {
-          "type": "apiKey",
-          "in": "header",
-          "name": "access_key"
-        },
-        "appId": {
-          "type": "apiKey",
-          "in": "header",
-          "name": "app_id"
+      "Forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": 403,
+              "message": "Forbidden"
+            }
+          }
         }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": 404,
+              "message": "Not found"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "accessKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "access_key"
+      },
+      "appId": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "app_id"
       }
     }
   },
