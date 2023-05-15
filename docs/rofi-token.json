@@ -1,1 +1,1795 @@
-{"openapi":"3.0.0","info":{"title":"Rofi Token","version":"1.1.8","description":"Token balance, transaction management system","contact":{"name":"Rofi Token","url":"https://app.rofi.games/","email":"tanlm@bravezone.com"}},"servers":[{"url":"http://localhost:8890","description":"Development server"},{"url":"https://api-dev.rofi.games","description":"Test server"}],"paths":{"/api/v1/internal/tokens/balance":{"get":{"summary":"Get token balance for a symbol","tags":["Token"],"security":[{"apiKey":[],"appId":[]}],"parameters":[{"in":"query","name":"symbol","required":true,"schema":{"type":"string","example":"IDL"},"description":"Token's symbol"},{"in":"query","name":"userId","required":true,"schema":{"type":"string","format":"uuid","example":"2ae00ece-98b5-42b8-9134-d873ef31944b"},"description":"ROFI account id"}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"object","properties":{"balance":{"type":"number","description":"Current balance","default":0},"symbol":{"type":"string","description":"Token's symbol in uppercase","default":0}}}},"example":{"code":0,"message":null,"data":{"balance":100,"symbol":"IDL"}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/internal/tokens/withdraw":{"post":{"summary":"Withdraw an amount of token","tags":["Token"],"security":{"bearerAuth":[]},"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["userId","amount","symbol"],"properties":{"userId":{"type":"string","format":"uuid","example":"d70d6443-de2f-4f0e-a023-4dbcbe056777","description":"ROFI account ID"},"amount":{"type":"number","description":"Amount to withdraw","example":1000},"symbol":{"type":"string","description":"Token's symbol","example":"IDL"}},"example":{"userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","amount":"250","symbol":"IDL"}}}}},"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number"},"message":{"type":"string"},"data":{"type":"object","properties":{"transactionReceipt":{"type":"object","$ref":"#/components/schemas/Transaction"},"balance":{"type":"object","$ref":"#/components/schemas/Balance"}}}}},"example":{"code":0,"message":null,"data":{"transactionReceipt":{"userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"withdraw","symbol":"IDL","status":"Pending","amount":250,"oldBalance":997700,"newBalance":997450,"_id":"6454b4e2d5dab7bf995175ae","createdAt":"2023-05-05T07:48:50.452Z"},"balance":{"_id":"643f9a96ce3045d8bcec9f61","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","symbol":"IDL","balance":997450,"createdAt":"2022-11-14T02:30:38.327Z","updatedAt":"2023-05-05T07:48:50.456Z"}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"code":400,"message":"Invalid amount"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/internal/tokens/deposit":{"post":{"summary":"Deposit token","tags":["Token"],"security":[{"apiKey":[],"appId":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["userId","amount","symbol","transactionHash"],"properties":{"userId":{"type":"string","example":"2ae00ece-98b5-42b8-9134-d873ef31944b","format":"uuid","description":"ROFI account id"},"amount":{"type":"number","example":100,"description":"Amount of token to deposit"},"symbol":{"type":"string","example":"IDL","description":"Token's symbol"},"transactionHash":{"type":"string","example":"0x06983189221322b0dd54e4cb039977dbac417051e5bd48a4f06d3a68d549600e","description":"Deposit transaction on-chain"}},"example":{"userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","amount":"100","symbol":"IDL","transactionHash":"0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"}}}}},"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number"},"message":{"type":"string"},"data":{"type":"object","properties":{"transactionReceipt":{"$ref":"#/components/schemas/Transaction"},"balance":{"$ref":"#/components/schemas/Balance"}}}}},"example":{"code":0,"message":null,"data":{"transactionReceipt":{"_id":"6454899d17f6f52c8895f0f8","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"deposit","symbol":"IDL","status":"Success","amount":100,"oldBalance":997600,"newBalance":997700,"metadata":{"transactionHash":"0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"},"createdAt":"2023-05-05T04:44:13.361Z"},"balance":{"_id":"643f9a96ce3045d8bcec9f61","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","symbol":"IDL","balance":997700,"createdAt":"2022-11-14T02:30:38.327Z","updatedAt":"2023-05-05T04:44:13.365Z"}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"code":400,"message":"Invalid amount"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/public/tokens/balance":{"get":{"summary":"Get token balance for a symbol","tags":["Token"],"security":[{"bearerAuth":[]}],"parameters":[{"in":"query","name":"symbol","required":true,"schema":{"type":"string","example":"IDL"},"description":"Token's symbol"}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"object","properties":{"balance":{"type":"number","description":"Current balance","default":0},"symbol":{"type":"string","description":"Token's symbol in uppercase","default":0}}}},"example":{"code":0,"message":null,"data":{"balance":100,"symbol":"IDL"}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/public/tokens/balance/all":{"get":{"summary":"Get all token balances","tags":["Token"],"security":[{"bearerAuth":[]}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"array","items":{"$ref":"#/components/schemas/Balance"}}},"example":{"code":0,"message":null,"data":[{"_id":"64547cb27a70d1be7c338f06","symbol":"IDL","balance":100},{"_id":"645480727a70d1be7c339042","symbol":"ROFI","balance":100}]}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/internal/transactions":{"get":{"summary":"Get transaction history for an user","tags":["Transaction"],"security":[{"apiKey":[],"appId":[]}],"parameters":[{"in":"query","name":"symbol","required":true,"schema":{"type":"string","example":"IDL"},"description":"Token's symbol"},{"in":"query","name":"userId","required":true,"schema":{"type":"string","format":"uuid","example":"2ae00ece-98b5-42b8-9134-d873ef31944b"},"description":"ROFI account id"},{"in":"query","name":"page","required":true,"schema":{"type":"integer","example":1},"description":"Page number"}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"object","properties":{"data":{"type":"array","items":{"$ref":"#/components/schemas/Transaction"},"description":"Transaction list"},"paginator":{"$ref":"#/components/schemas/Paginator"}}}},"example":{"code":0,"message":null,"data":{"data":[{"_id":"6454b4e2d5dab7bf995175ae","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"withdraw","symbol":"IDL","status":"Pending","amount":250,"oldBalance":997700,"newBalance":997450,"createdAt":"2023-05-05T07:48:50.452Z","id":"6454b4e2d5dab7bf995175ae"},{"_id":"6454899d17f6f52c8895f0f8","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"deposit","symbol":"IDL","status":"Success","amount":100,"oldBalance":997600,"newBalance":997700,"metadata":{"transactionHash":"0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"},"createdAt":"2023-05-05T04:44:13.361Z","id":"6454899d17f6f52c8895f0f8"},{"_id":"64547c3b70cd5d29247c7be7","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":997500,"newBalance":997600,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-05-05T03:47:07.414Z","id":"64547c3b70cd5d29247c7be7"},{"_id":"643f9aa6ff948f5e2e4f6c01","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"idolworld_be","transactionType":"buy_item_in_game","symbol":"IDL","status":"Success","amount":2500,"oldBalance":1000000,"newBalance":997500,"metadata":{"packIds":["31443"]},"createdAt":"2023-04-19T07:39:18.167Z","id":"643f9aa6ff948f5e2e4f6c01"},{"_id":"64114218bda443c511339e0e","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":996150,"newBalance":996250,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-15T03:57:12.952Z","id":"64114218bda443c511339e0e"},{"_id":"6406b4d61edeb838ce75be95","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":996050,"newBalance":996150,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:51:50.105Z","id":"6406b4d61edeb838ce75be95"},{"_id":"6406b4c71edeb838ce75be8d","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995950,"newBalance":996050,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:51:35.098Z","id":"6406b4c71edeb838ce75be8d"},{"_id":"6406b2f6da66eb2303593392","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995850,"newBalance":995850100,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:43:50.908Z","id":"6406b2f6da66eb2303593392"},{"_id":"6406b2dadb2f31d24cf55d6e","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995750,"newBalance":995750100,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:43:22.120Z","id":"6406b2dadb2f31d24cf55d6e"},{"_id":"6406ae93b104cfa277fe1188","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995650,"newBalance":995750,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:25:07.998Z","id":"6406ae93b104cfa277fe1188"}],"paginator":{"total":30,"limit":10,"totalPages":3,"currentPage":1,"slNo":1,"hasPrevPage":false,"hasNextPage":true,"prev":null,"next":2}}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}},"post":{"summary":"Create a transaction","tags":["Transaction"],"security":[{"apiKey":[],"appId":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["userId","symbol","amount","transactionType"],"properties":{"userId":{"type":"string","format":"uuid","example":"d70d6443-de2f-4f0e-a023-4dbcbe056777","description":"ROFI account ID"},"amount":{"type":"number","description":"Amount to withdraw","example":1000},"symbol":{"type":"string","description":"Token's symbol","example":"IDL"},"transactionType":{"type":"string","enum":["deposit","refund","earn_in_game","reward_in_game","buy_item_in_game","revert"]},"description":{"type":"string","description":"Short description for the transaction"},"metadata":{"description":"Additional information for the transaction","type":"object","additionalProperties":{}}},"example":{"userId":"2ae00ece-98b5-42b8-9134-d873ef31944b","symbol":"ROFI","amount":100,"transactionType":"refund","description":"Withdraw failed","metadata":{"transactionId":"639c227e85c019492bc6e63c"}}}}}},"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number"},"message":{"type":"string"},"data":{"type":"object","properties":{"transactionReceipt":{"type":"object","$ref":"#/components/schemas/Transaction"},"balance":{"type":"object","$ref":"#/components/schemas/Balance"}}}},"example":{"code":0,"message":null,"data":{"transactionReceipt":{"_id":"64548072d7c4b4c95329aa55","userId":"2ae00ece-98b5-42b8-9134-d873ef31944b","appId":"reward_be","transactionType":"refund","symbol":"ROFI","status":"Success","amount":100,"oldBalance":0,"newBalance":100,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-05-05T04:05:06.285Z"},"balance":{"_id":"645480727a70d1be7c339042","symbol":"ROFI","userId":"2ae00ece-98b5-42b8-9134-d873ef31944b","balance":100,"createdAt":"2023-05-05T04:05:06.298Z","updatedAt":"2023-05-05T04:05:06.298Z"}}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}},"put":{"summary":"Update withdraw transaction status","tags":["Transaction"],"security":[{"apiKey":[],"appId":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["transactionId","status"],"properties":{"transactionId":{"type":"string","description":"Transaction id in ROFI token service","example":"639c227e85c019492bc6e63c"},"transactionHash":{"type":"string","description":"Transaction hash on blockchain","example":"0x06983189221322b0dd54e4cb039977dbac417051e5bd48a4f06d3a68d549600e"},"status":{"type":"string","enum":["Success","Fail"]}},"example":{"transactionId":"6454c43579500ffbdcb13faf","transactionHash":"0x8155e94ac646d2a05e000a8ba4eb6dac4dd2302fd72a9b6c2a2a550b99e4738b","status":"Fail"}}}}},"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number"},"message":{"type":"string"},"data":{"type":"object","$ref":"#/components/schemas/Transaction"}},"example":{"code":0,"message":null,"data":{"_id":"6454c43579500ffbdcb13faf","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"withdraw","symbol":"IDL","status":"Fail","amount":250,"oldBalance":997450,"newBalance":997200,"createdAt":"2023-05-05T08:54:13.653Z","metadata":{"transactionHash":"0x8155e94ac646d2a05e000a8ba4eb6dac4dd2302fd72a9b6c2a2a550b99e4738b"}}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/internal/transactions/total-deposit":{"get":{"summary":"Get total token deposited","tags":["Transaction"],"security":[{"apiKey":[],"appId":[]}],"parameters":[{"in":"query","name":"symbol","required":true,"schema":{"type":"string","example":"IDL"},"description":"Token's symbol"},{"in":"query","name":"userId","required":true,"schema":{"type":"string","format":"uuid","example":"2ae00ece-98b5-42b8-9134-d873ef31944b"},"description":"ROFI account id"},{"in":"query","name":"fromDate","required":true,"schema":{"type":"string","example":"2023-05-11T10:00:00"}},{"in":"query","name":"toDate","required":true,"schema":{"type":"string","example":"2023-05-12T10:00:00"}}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"object","properties":{"value":{"type":"number","example":1000}}}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/internal/transactions/total-earn-in-game":{"get":{"summary":"Get total token deposited","tags":["Transaction"],"security":[{"apiKey":[],"appId":[]}],"parameters":[{"in":"query","name":"symbol","required":true,"schema":{"type":"string","example":"IDL"},"description":"Token's symbol"},{"in":"query","name":"userId","required":true,"schema":{"type":"string","format":"uuid","example":"2ae00ece-98b5-42b8-9134-d873ef31944b"},"description":"ROFI account id"},{"in":"query","name":"fromDate","required":true,"schema":{"type":"string","example":"2023-05-11T10:00:00"}},{"in":"query","name":"toDate","required":true,"schema":{"type":"string","example":"2023-05-12T10:00:00"}}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"object","properties":{"value":{"type":"number","example":1000}}}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}},"/api/v1/public/transactions":{"get":{"summary":"User get transaction history for an token","tags":["Transaction"],"security":{"bearerAuth":[]},"parameters":[{"in":"query","name":"symbol","required":true,"schema":{"type":"string","example":"IDL"},"description":"Token's symbol"},{"in":"query","name":"page","required":true,"schema":{"type":"integer","example":1},"description":"Page number"}],"responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","properties":{"code":{"type":"number","example":0},"message":{"type":"string","example":"Successfully"},"data":{"type":"object","properties":{"data":{"type":"array","items":{"$ref":"#/components/schemas/Transaction"},"description":"Transaction list"},"paginator":{"$ref":"#/components/schemas/Paginator"}}}},"example":{"code":0,"message":null,"data":{"data":[{"_id":"6454b4e2d5dab7bf995175ae","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"withdraw","symbol":"IDL","status":"Pending","amount":250,"oldBalance":997700,"newBalance":997450,"createdAt":"2023-05-05T07:48:50.452Z","id":"6454b4e2d5dab7bf995175ae"},{"_id":"6454899d17f6f52c8895f0f8","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"deposit","symbol":"IDL","status":"Success","amount":100,"oldBalance":997600,"newBalance":997700,"metadata":{"transactionHash":"0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"},"createdAt":"2023-05-05T04:44:13.361Z","id":"6454899d17f6f52c8895f0f8"},{"_id":"64547c3b70cd5d29247c7be7","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":997500,"newBalance":997600,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-05-05T03:47:07.414Z","id":"64547c3b70cd5d29247c7be7"},{"_id":"643f9aa6ff948f5e2e4f6c01","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"idolworld_be","transactionType":"buy_item_in_game","symbol":"IDL","status":"Success","amount":2500,"oldBalance":1000000,"newBalance":997500,"metadata":{"packIds":["31443"]},"createdAt":"2023-04-19T07:39:18.167Z","id":"643f9aa6ff948f5e2e4f6c01"},{"_id":"64114218bda443c511339e0e","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":996150,"newBalance":996250,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-15T03:57:12.952Z","id":"64114218bda443c511339e0e"},{"_id":"6406b4d61edeb838ce75be95","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":996050,"newBalance":996150,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:51:50.105Z","id":"6406b4d61edeb838ce75be95"},{"_id":"6406b4c71edeb838ce75be8d","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995950,"newBalance":996050,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:51:35.098Z","id":"6406b4c71edeb838ce75be8d"},{"_id":"6406b2f6da66eb2303593392","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995850,"newBalance":995850100,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:43:50.908Z","id":"6406b2f6da66eb2303593392"},{"_id":"6406b2dadb2f31d24cf55d6e","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995750,"newBalance":995750100,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:43:22.120Z","id":"6406b2dadb2f31d24cf55d6e"},{"_id":"6406ae93b104cfa277fe1188","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"reward_be","transactionType":"refund","symbol":"IDL","status":"Success","amount":100,"oldBalance":995650,"newBalance":995750,"metadata":{"transactionId":"639c227e85c019492bc6e63c"},"description":"Withdraw failed","createdAt":"2023-03-07T03:25:07.998Z","id":"6406ae93b104cfa277fe1188"}],"paginator":{"total":30,"limit":10,"totalPages":3,"currentPage":1,"slNo":1,"hasPrevPage":false,"hasNextPage":true,"prev":null,"next":2}}}}}}},"400":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"401":{"$ref":"#/components/responses/Unauthorized"}}}}},"components":{"schemas":{"SimpleBalance":{"type":"object","properties":{"_id":{"type":"string","example":"64547cb27a70d1be7c338f06"},"balance":{"type":"number","example":100},"symbol":{"type":"string","example":"IDL"}}},"Balance":{"type":"object","properties":{"_id":{"type":"string","example":"64547cb27a70d1be7c338f06"},"balance":{"type":"number","example":100},"symbol":{"type":"string","example":"IDL"},"userId":{"type":"string","format":"uuid","example":"d70d6443-de2f-4f0e-a023-4dbcbe056777"},"createdAt":{"type":"string","format":"date"},"updatedAt":{"type":"string","format":"date"}}},"Transaction":{"type":"object","properties":{"userId":{"type":"string","description":"ROFI account ID"},"appId":{"type":"string","example":"dapp_be","description":"Internal app id"},"transactionType":{"type":"string","enum":["deposit","refund","earn_in_game","reward_in_game","buy_item_in_game","revert"]},"symbol":{"type":"string"},"amount":{"type":"number","example":100},"status":{"type":"string","enum":["Success","Pending","Fail"]},"oldBalance":{"type":"number"},"newBalance":{"type":"number"},"metadata":{"type":"object"},"createdBy":{"type":"string"},"_id":{"type":"string"},"createdAt":{"type":"string","format":"date"}},"example":{"_id":"6454899d17f6f52c8895f0f8","userId":"d70d6443-de2f-4f0e-a023-4dbcbe056777","appId":"dapp_be","transactionType":"deposit","symbol":"IDL","status":"Success","amount":100,"oldBalance":997600,"newBalance":997700,"metadata":{"transactionHash":"0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"},"createdAt":"2023-05-05T04:44:13.361Z"}},"Paginator":{"type":"object","properties":{"total":{"type":"integer","example":1},"limit":{"type":"integer","example":10},"totalPages":{"type":"integer","example":1},"currentPage":{"type":"integer","nullable":true,"example":null},"slNo":{"type":"number","nullable":true,"example":null},"hasPrevPage":{"type":"boolean","example":false},"hasNextPage":{"type":"boolean","example":false},"prev":{"type":"integer","nullable":true,"example":null},"next":{"type":"integer","nullable":true,"example":null}}},"Error":{"type":"object","properties":{"code":{"type":"number"},"message":{"type":"string"},"data":{"type":"object","nullable":true},"errors":{"type":"array","items":{"type":"object","properties":{"value":{"type":"string"},"msg":{"type":"string"},"param":{"type":"string"},"location":{"type":"string"}}}}}}},"responses":{"Unauthorized":{"description":"Unauthorized","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"code":401,"message":"Please authenticate"}}}},"Forbidden":{"description":"Forbidden","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"code":403,"message":"Forbidden"}}}},"NotFound":{"description":"Not found","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"code":404,"message":"Not found"}}}}},"securitySchemes":{"bearerAuth":{"type":"http","scheme":"bearer","bearerFormat":"JWT"},"accessKey":{"type":"apiKey","in":"header","name":"access_key"},"appId":{"type":"apiKey","in":"header","name":"app_id"}}},"tags":[{"name":"Token","description":"Token balance, increase/decrease balance"}]}
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rofi Token",
+    "version": "1.1.8",
+    "description": "Token balance, transaction management system",
+    "contact": {
+      "name": "Rofi Token",
+      "url": "https://app.rofi.games/",
+      "email": "tanlm@bravezone.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8890",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api-dev.rofi.games",
+      "description": "Test server"
+    }
+  ],
+  "paths": {
+    "/api/v1/internal/tokens/balance": {
+      "get": {
+        "summary": "Get token balance for a symbol",
+        "tags": [
+          "Token"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "IDL"
+            },
+            "description": "Token's symbol"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "2ae00ece-98b5-42b8-9134-d873ef31944b"
+            },
+            "description": "ROFI account id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "balance": {
+                          "type": "number",
+                          "description": "Current balance",
+                          "default": 0
+                        },
+                        "symbol": {
+                          "type": "string",
+                          "description": "Token's symbol in uppercase",
+                          "default": 0
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": {
+                      "balance": 100,
+                      "symbol": "IDL"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/internal/tokens/withdraw": {
+      "post": {
+        "summary": "Withdraw an amount of token",
+        "tags": [
+          "Token"
+        ],
+        "security": {
+          "bearerAuth": []
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "amount",
+                  "symbol"
+                ],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                    "description": "ROFI account ID"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "description": "Amount to withdraw",
+                    "example": 1000
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "description": "Token's symbol",
+                    "example": "IDL"
+                  }
+                },
+                "example": {
+                  "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                  "amount": "250",
+                  "symbol": "IDL"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transactionReceipt": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/Transaction"
+                        },
+                        "balance": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/Balance"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": 0,
+                  "message": null,
+                  "data": {
+                    "transactionReceipt": {
+                      "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                      "appId": "dapp_be",
+                      "transactionType": "withdraw",
+                      "symbol": "IDL",
+                      "status": "Pending",
+                      "amount": 250,
+                      "oldBalance": 997700,
+                      "newBalance": 997450,
+                      "_id": "6454b4e2d5dab7bf995175ae",
+                      "createdAt": "2023-05-05T07:48:50.452Z"
+                    },
+                    "balance": {
+                      "_id": "643f9a96ce3045d8bcec9f61",
+                      "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                      "symbol": "IDL",
+                      "balance": 997450,
+                      "createdAt": "2022-11-14T02:30:38.327Z",
+                      "updatedAt": "2023-05-05T07:48:50.456Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": 400,
+                  "message": "Invalid amount"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/internal/tokens/deposit": {
+      "post": {
+        "summary": "Deposit token",
+        "tags": [
+          "Token"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "amount",
+                  "symbol",
+                  "transactionHash"
+                ],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "2ae00ece-98b5-42b8-9134-d873ef31944b",
+                    "format": "uuid",
+                    "description": "ROFI account id"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 100,
+                    "description": "Amount of token to deposit"
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "example": "IDL",
+                    "description": "Token's symbol"
+                  },
+                  "transactionHash": {
+                    "type": "string",
+                    "example": "0x06983189221322b0dd54e4cb039977dbac417051e5bd48a4f06d3a68d549600e",
+                    "description": "Deposit transaction on-chain"
+                  }
+                },
+                "example": {
+                  "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                  "amount": "100",
+                  "symbol": "IDL",
+                  "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transactionReceipt": {
+                          "$ref": "#/components/schemas/Transaction"
+                        },
+                        "balance": {
+                          "$ref": "#/components/schemas/Balance"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": 0,
+                  "message": null,
+                  "data": {
+                    "transactionReceipt": {
+                      "_id": "6454899d17f6f52c8895f0f8",
+                      "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                      "appId": "dapp_be",
+                      "transactionType": "deposit",
+                      "symbol": "IDL",
+                      "status": "Success",
+                      "amount": 100,
+                      "oldBalance": 997600,
+                      "newBalance": 997700,
+                      "metadata": {
+                        "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
+                      },
+                      "createdAt": "2023-05-05T04:44:13.361Z"
+                    },
+                    "balance": {
+                      "_id": "643f9a96ce3045d8bcec9f61",
+                      "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                      "symbol": "IDL",
+                      "balance": 997700,
+                      "createdAt": "2022-11-14T02:30:38.327Z",
+                      "updatedAt": "2023-05-05T04:44:13.365Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": 400,
+                  "message": "Invalid amount"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/public/tokens/balance": {
+      "get": {
+        "summary": "Get token balance for a symbol",
+        "tags": [
+          "Token"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "IDL"
+            },
+            "description": "Token's symbol"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "balance": {
+                          "type": "number",
+                          "description": "Current balance",
+                          "default": 0
+                        },
+                        "symbol": {
+                          "type": "string",
+                          "description": "Token's symbol in uppercase",
+                          "default": 0
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": {
+                      "balance": 100,
+                      "symbol": "IDL"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/public/tokens/balance/all": {
+      "get": {
+        "summary": "Get all token balances",
+        "tags": [
+          "Token"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Balance"
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": [
+                      {
+                        "_id": "64547cb27a70d1be7c338f06",
+                        "symbol": "IDL",
+                        "balance": 100
+                      },
+                      {
+                        "_id": "645480727a70d1be7c339042",
+                        "symbol": "ROFI",
+                        "balance": 100
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/internal/transactions": {
+      "get": {
+        "summary": "Get transaction history for an user",
+        "tags": [
+          "Transaction"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "IDL"
+            },
+            "description": "Token's symbol"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "2ae00ece-98b5-42b8-9134-d873ef31944b"
+            },
+            "description": "ROFI account id"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                          },
+                          "description": "Transaction list"
+                        },
+                        "paginator": {
+                          "$ref": "#/components/schemas/Paginator"
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": {
+                      "data": [
+                        {
+                          "_id": "6454b4e2d5dab7bf995175ae",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "dapp_be",
+                          "transactionType": "withdraw",
+                          "symbol": "IDL",
+                          "status": "Pending",
+                          "amount": 250,
+                          "oldBalance": 997700,
+                          "newBalance": 997450,
+                          "createdAt": "2023-05-05T07:48:50.452Z",
+                          "id": "6454b4e2d5dab7bf995175ae"
+                        },
+                        {
+                          "_id": "6454899d17f6f52c8895f0f8",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "dapp_be",
+                          "transactionType": "deposit",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 997600,
+                          "newBalance": 997700,
+                          "metadata": {
+                            "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
+                          },
+                          "createdAt": "2023-05-05T04:44:13.361Z",
+                          "id": "6454899d17f6f52c8895f0f8"
+                        },
+                        {
+                          "_id": "64547c3b70cd5d29247c7be7",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 997500,
+                          "newBalance": 997600,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-05-05T03:47:07.414Z",
+                          "id": "64547c3b70cd5d29247c7be7"
+                        },
+                        {
+                          "_id": "643f9aa6ff948f5e2e4f6c01",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "idolworld_be",
+                          "transactionType": "buy_item_in_game",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 2500,
+                          "oldBalance": 1000000,
+                          "newBalance": 997500,
+                          "metadata": {
+                            "packIds": [
+                              "31443"
+                            ]
+                          },
+                          "createdAt": "2023-04-19T07:39:18.167Z",
+                          "id": "643f9aa6ff948f5e2e4f6c01"
+                        },
+                        {
+                          "_id": "64114218bda443c511339e0e",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 996150,
+                          "newBalance": 996250,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-15T03:57:12.952Z",
+                          "id": "64114218bda443c511339e0e"
+                        },
+                        {
+                          "_id": "6406b4d61edeb838ce75be95",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 996050,
+                          "newBalance": 996150,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:51:50.105Z",
+                          "id": "6406b4d61edeb838ce75be95"
+                        },
+                        {
+                          "_id": "6406b4c71edeb838ce75be8d",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995950,
+                          "newBalance": 996050,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:51:35.098Z",
+                          "id": "6406b4c71edeb838ce75be8d"
+                        },
+                        {
+                          "_id": "6406b2f6da66eb2303593392",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995850,
+                          "newBalance": 995850100,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:43:50.908Z",
+                          "id": "6406b2f6da66eb2303593392"
+                        },
+                        {
+                          "_id": "6406b2dadb2f31d24cf55d6e",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995750,
+                          "newBalance": 995750100,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:43:22.120Z",
+                          "id": "6406b2dadb2f31d24cf55d6e"
+                        },
+                        {
+                          "_id": "6406ae93b104cfa277fe1188",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995650,
+                          "newBalance": 995750,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:25:07.998Z",
+                          "id": "6406ae93b104cfa277fe1188"
+                        }
+                      ],
+                      "paginator": {
+                        "total": 30,
+                        "limit": 10,
+                        "totalPages": 3,
+                        "currentPage": 1,
+                        "slNo": 1,
+                        "hasPrevPage": false,
+                        "hasNextPage": true,
+                        "prev": null,
+                        "next": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a transaction",
+        "tags": [
+          "Transaction"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "symbol",
+                  "amount",
+                  "transactionType"
+                ],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                    "description": "ROFI account ID"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "description": "Amount to withdraw",
+                    "example": 1000
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "description": "Token's symbol",
+                    "example": "IDL"
+                  },
+                  "transactionType": {
+                    "type": "string",
+                    "enum": [
+                      "deposit",
+                      "refund",
+                      "earn_in_game",
+                      "reward_in_game",
+                      "buy_item_in_game",
+                      "revert"
+                    ]
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Short description for the transaction"
+                  },
+                  "metadata": {
+                    "description": "Additional information for the transaction",
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
+                },
+                "example": {
+                  "userId": "2ae00ece-98b5-42b8-9134-d873ef31944b",
+                  "symbol": "ROFI",
+                  "amount": 100,
+                  "transactionType": "refund",
+                  "description": "Withdraw failed",
+                  "metadata": {
+                    "transactionId": "639c227e85c019492bc6e63c"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transactionReceipt": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/Transaction"
+                        },
+                        "balance": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/Balance"
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": {
+                      "transactionReceipt": {
+                        "_id": "64548072d7c4b4c95329aa55",
+                        "userId": "2ae00ece-98b5-42b8-9134-d873ef31944b",
+                        "appId": "reward_be",
+                        "transactionType": "refund",
+                        "symbol": "ROFI",
+                        "status": "Success",
+                        "amount": 100,
+                        "oldBalance": 0,
+                        "newBalance": 100,
+                        "metadata": {
+                          "transactionId": "639c227e85c019492bc6e63c"
+                        },
+                        "description": "Withdraw failed",
+                        "createdAt": "2023-05-05T04:05:06.285Z"
+                      },
+                      "balance": {
+                        "_id": "645480727a70d1be7c339042",
+                        "symbol": "ROFI",
+                        "userId": "2ae00ece-98b5-42b8-9134-d873ef31944b",
+                        "balance": 100,
+                        "createdAt": "2023-05-05T04:05:06.298Z",
+                        "updatedAt": "2023-05-05T04:05:06.298Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update withdraw transaction status",
+        "tags": [
+          "Transaction"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "transactionId",
+                  "status"
+                ],
+                "properties": {
+                  "transactionId": {
+                    "type": "string",
+                    "description": "Transaction id in ROFI token service",
+                    "example": "639c227e85c019492bc6e63c"
+                  },
+                  "transactionHash": {
+                    "type": "string",
+                    "description": "Transaction hash on blockchain",
+                    "example": "0x06983189221322b0dd54e4cb039977dbac417051e5bd48a4f06d3a68d549600e"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Success",
+                      "Fail"
+                    ]
+                  }
+                },
+                "example": {
+                  "transactionId": "6454c43579500ffbdcb13faf",
+                  "transactionHash": "0x8155e94ac646d2a05e000a8ba4eb6dac4dd2302fd72a9b6c2a2a550b99e4738b",
+                  "status": "Fail"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/Transaction"
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": {
+                      "_id": "6454c43579500ffbdcb13faf",
+                      "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                      "appId": "dapp_be",
+                      "transactionType": "withdraw",
+                      "symbol": "IDL",
+                      "status": "Fail",
+                      "amount": 250,
+                      "oldBalance": 997450,
+                      "newBalance": 997200,
+                      "createdAt": "2023-05-05T08:54:13.653Z",
+                      "metadata": {
+                        "transactionHash": "0x8155e94ac646d2a05e000a8ba4eb6dac4dd2302fd72a9b6c2a2a550b99e4738b"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/internal/transactions/total-deposit": {
+      "get": {
+        "summary": "Get total token deposited",
+        "tags": [
+          "Transaction"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "IDL"
+            },
+            "description": "Token's symbol"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "2ae00ece-98b5-42b8-9134-d873ef31944b"
+            },
+            "description": "ROFI account id"
+          },
+          {
+            "in": "query",
+            "name": "fromDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2023-05-11T10:00:00"
+            }
+          },
+          {
+            "in": "query",
+            "name": "toDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2023-05-12T10:00:00"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "example": 1000
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/internal/transactions/total-earn-in-game": {
+      "get": {
+        "summary": "Get total token deposited",
+        "tags": [
+          "Transaction"
+        ],
+        "security": [
+          {
+            "apiKey": [],
+            "appId": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "IDL"
+            },
+            "description": "Token's symbol"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "2ae00ece-98b5-42b8-9134-d873ef31944b"
+            },
+            "description": "ROFI account id"
+          },
+          {
+            "in": "query",
+            "name": "fromDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2023-05-11T10:00:00"
+            }
+          },
+          {
+            "in": "query",
+            "name": "toDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "2023-05-12T10:00:00"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "example": 1000
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/public/transactions": {
+      "get": {
+        "summary": "User get transaction history for an token",
+        "tags": [
+          "Transaction"
+        ],
+        "security": {
+          "bearerAuth": []
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "IDL"
+            },
+            "description": "Token's symbol"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                          },
+                          "description": "Transaction list"
+                        },
+                        "paginator": {
+                          "$ref": "#/components/schemas/Paginator"
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 0,
+                    "message": null,
+                    "data": {
+                      "data": [
+                        {
+                          "_id": "6454b4e2d5dab7bf995175ae",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "dapp_be",
+                          "transactionType": "withdraw",
+                          "symbol": "IDL",
+                          "status": "Pending",
+                          "amount": 250,
+                          "oldBalance": 997700,
+                          "newBalance": 997450,
+                          "createdAt": "2023-05-05T07:48:50.452Z",
+                          "id": "6454b4e2d5dab7bf995175ae"
+                        },
+                        {
+                          "_id": "6454899d17f6f52c8895f0f8",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "dapp_be",
+                          "transactionType": "deposit",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 997600,
+                          "newBalance": 997700,
+                          "metadata": {
+                            "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
+                          },
+                          "createdAt": "2023-05-05T04:44:13.361Z",
+                          "id": "6454899d17f6f52c8895f0f8"
+                        },
+                        {
+                          "_id": "64547c3b70cd5d29247c7be7",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 997500,
+                          "newBalance": 997600,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-05-05T03:47:07.414Z",
+                          "id": "64547c3b70cd5d29247c7be7"
+                        },
+                        {
+                          "_id": "643f9aa6ff948f5e2e4f6c01",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "idolworld_be",
+                          "transactionType": "buy_item_in_game",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 2500,
+                          "oldBalance": 1000000,
+                          "newBalance": 997500,
+                          "metadata": {
+                            "packIds": [
+                              "31443"
+                            ]
+                          },
+                          "createdAt": "2023-04-19T07:39:18.167Z",
+                          "id": "643f9aa6ff948f5e2e4f6c01"
+                        },
+                        {
+                          "_id": "64114218bda443c511339e0e",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 996150,
+                          "newBalance": 996250,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-15T03:57:12.952Z",
+                          "id": "64114218bda443c511339e0e"
+                        },
+                        {
+                          "_id": "6406b4d61edeb838ce75be95",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 996050,
+                          "newBalance": 996150,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:51:50.105Z",
+                          "id": "6406b4d61edeb838ce75be95"
+                        },
+                        {
+                          "_id": "6406b4c71edeb838ce75be8d",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995950,
+                          "newBalance": 996050,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:51:35.098Z",
+                          "id": "6406b4c71edeb838ce75be8d"
+                        },
+                        {
+                          "_id": "6406b2f6da66eb2303593392",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995850,
+                          "newBalance": 995850100,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:43:50.908Z",
+                          "id": "6406b2f6da66eb2303593392"
+                        },
+                        {
+                          "_id": "6406b2dadb2f31d24cf55d6e",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995750,
+                          "newBalance": 995750100,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:43:22.120Z",
+                          "id": "6406b2dadb2f31d24cf55d6e"
+                        },
+                        {
+                          "_id": "6406ae93b104cfa277fe1188",
+                          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+                          "appId": "reward_be",
+                          "transactionType": "refund",
+                          "symbol": "IDL",
+                          "status": "Success",
+                          "amount": 100,
+                          "oldBalance": 995650,
+                          "newBalance": 995750,
+                          "metadata": {
+                            "transactionId": "639c227e85c019492bc6e63c"
+                          },
+                          "description": "Withdraw failed",
+                          "createdAt": "2023-03-07T03:25:07.998Z",
+                          "id": "6406ae93b104cfa277fe1188"
+                        }
+                      ],
+                      "paginator": {
+                        "total": 30,
+                        "limit": 10,
+                        "totalPages": 3,
+                        "currentPage": 1,
+                        "slNo": 1,
+                        "hasPrevPage": false,
+                        "hasNextPage": true,
+                        "prev": null,
+                        "next": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SimpleBalance": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64547cb27a70d1be7c338f06"
+          },
+          "balance": {
+            "type": "number",
+            "example": 100
+          },
+          "symbol": {
+            "type": "string",
+            "example": "IDL"
+          }
+        }
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64547cb27a70d1be7c338f06"
+          },
+          "balance": {
+            "type": "number",
+            "example": 100
+          },
+          "symbol": {
+            "type": "string",
+            "example": "IDL"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d70d6443-de2f-4f0e-a023-4dbcbe056777"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "ROFI account ID"
+          },
+          "appId": {
+            "type": "string",
+            "example": "dapp_be",
+            "description": "Internal app id"
+          },
+          "transactionType": {
+            "type": "string",
+            "enum": [
+              "deposit",
+              "refund",
+              "earn_in_game",
+              "reward_in_game",
+              "buy_item_in_game",
+              "revert"
+            ]
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "example": 100
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Success",
+              "Pending",
+              "Fail"
+            ]
+          },
+          "oldBalance": {
+            "type": "number"
+          },
+          "newBalance": {
+            "type": "number"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "example": {
+          "_id": "6454899d17f6f52c8895f0f8",
+          "userId": "d70d6443-de2f-4f0e-a023-4dbcbe056777",
+          "appId": "dapp_be",
+          "transactionType": "deposit",
+          "symbol": "IDL",
+          "status": "Success",
+          "amount": 100,
+          "oldBalance": 997600,
+          "newBalance": 997700,
+          "metadata": {
+            "transactionHash": "0x6a00238cdb834376f8fe1fec32c83bc0ec03afaed49168f2d5b09b17e153942c"
+          },
+          "createdAt": "2023-05-05T04:44:13.361Z"
+        }
+      },
+      "Paginator": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "example": 10
+          },
+          "totalPages": {
+            "type": "integer",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "integer",
+            "nullable": true,
+            "example": null
+          },
+          "slNo": {
+            "type": "number",
+            "nullable": true,
+            "example": null
+          },
+          "hasPrevPage": {
+            "type": "boolean",
+            "example": false
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "example": false
+          },
+          "prev": {
+            "type": "integer",
+            "nullable": true,
+            "example": null
+          },
+          "next": {
+            "type": "integer",
+            "nullable": true,
+            "example": null
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "msg": {
+                  "type": "string"
+                },
+                "param": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": 401,
+              "message": "Please authenticate"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": 403,
+              "message": "Forbidden"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "code": 404,
+              "message": "Not found"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Token",
+      "description": "Token balance, increase/decrease balance"
+    }
+  ]
+}
