@@ -1,0 +1,1532 @@
+openapi: 3.0.1
+info:
+  title: ROFI PAYMENT API
+  description: ROFI PAYMENT API
+  version: v1
+paths:
+  /admin/{gameCode}/report-revenue:
+    get:
+      tags:
+        - Admin
+      parameters:
+        - name: gameCode
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+        - name: toDate
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /admin/{gameCode}/rev-topup:
+    get:
+      tags:
+        - Admin
+      summary: ''
+      parameters:
+        - name: gameCode
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          description: ''
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          description: 'Format: yyyy-MM-ddTHH:mm:ss'
+          schema:
+            type: string
+        - name: toDate
+          in: query
+          description: 'Format: yyyy-MM-ddTHH:mm:ss'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /admin/config-refund-game:
+    post:
+      tags:
+        - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigRefundToGameRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ConfigRefundToGameRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ConfigRefundToGameRequest'
+      responses:
+        '200':
+          description: Success
+  /admin/import/receipt:
+    post:
+      tags:
+        - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportReceiptRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ImportReceiptRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ImportReceiptRequest'
+      responses:
+        '200':
+          description: Success
+  /admin/logs-3rd/order/{orderId}:
+    get:
+      tags:
+        - Admin
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /admin/process-refund:
+    get:
+      tags:
+        - Admin
+      parameters:
+        - name: orderId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /admin/receipts:
+    get:
+      tags:
+        - Admin
+      parameters:
+        - name: gameCode
+          in: query
+          schema:
+            type: string
+        - name: packageName
+          in: query
+          schema:
+            type: string
+        - name: productId
+          in: query
+          schema:
+            type: string
+        - name: iapType
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: isRefund
+          in: query
+          schema:
+            type: boolean
+        - name: orderId
+          in: query
+          schema:
+            type: string
+        - name: isPurchased
+          in: query
+          schema:
+            type: boolean
+        - name: fromDate
+          in: query
+          schema:
+            type: string
+        - name: toDate
+          in: query
+          schema:
+            type: string
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: rows
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      responses:
+        '200':
+          description: Success
+  /admin/receipts/{orderId}:
+    get:
+      tags:
+        - Admin
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+  /common/exchange-rate:
+    get:
+      tags:
+        - Common
+      operationId: Get exchange rate
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /healthcheck:
+    get:
+      tags:
+        - HealthCheck
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  /help2pay/{orderId}:
+    post:
+      tags:
+        - Help2pay
+      summary: Receive Deposit Result
+      operationId: Receive Deposit Result
+      parameters:
+        - name: orderId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /help2pay/deposit-submission:
+    post:
+      tags:
+        - Help2pay
+      summary: '[USER] get Key for Deposit Submission'
+      operationId: Create Key for Deposit Submission
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyDepositSubmissionModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyDepositSubmissionModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyDepositSubmissionModel'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /iap/receipts-verify/apple:
+    post:
+      tags:
+        - IapPayments
+      summary: '[GAMESERVER] Send a receipt to the App Store for verification'
+      operationId: VerifyReceiptAppleAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptAppleInputModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptAppleInputModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptAppleInputModel'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Verify receipt apple success and response receipt apple data
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      environment: Production
+                      isRetryable: false
+                      latestReceipt: 0aW9uczFEMEIGA1UEAww7QX...
+                      status: 0
+                      receipt:
+                        receiptType: Production
+                        bundleId: com.rofi.plant.empires
+                        applicationVersion: '1'
+                        downloadId: '1660829050880450'
+                        versionExternalIdentifier: '852388116'
+                        requestDate: '1665484446099'
+                        receiptCreationDate: '1664533397000'
+                        originalPurchaseDate: '1660507316000'
+                        originalApplicationVersion: '1'
+                        inApp:
+                          - quantity: '1'
+                            productId: com.rofi.plant.empires.herochest4
+                            transactionId: '100001171740108'
+                            originalTransactionId: '100001171740108'
+                            purchaseDate: 2022-09-30 10:23:17 Etc/GMT
+                            purchaseDateMs: '1664533397000'
+                            originalPurchaseDate: '1664533397000'
+                            isTrialPeriod: 'false'
+                            inAppOwnershipType: PURCHASED
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Verify receipt apple success and response receipt apple data
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      environment: Production
+                      isRetryable: false
+                      latestReceipt: 0aW9uczFEMEIGA1UEAww7QX...
+                      status: 0
+                      receipt:
+                        receiptType: Production
+                        bundleId: com.rofi.plant.empires
+                        applicationVersion: '1'
+                        downloadId: '1660829050880450'
+                        versionExternalIdentifier: '852388116'
+                        requestDate: '1665484446099'
+                        receiptCreationDate: '1664533397000'
+                        originalPurchaseDate: '1660507316000'
+                        originalApplicationVersion: '1'
+                        inApp:
+                          - quantity: '1'
+                            productId: com.rofi.plant.empires.herochest4
+                            transactionId: '100001171740108'
+                            originalTransactionId: '100001171740108'
+                            purchaseDate: 2022-09-30 10:23:17 Etc/GMT
+                            purchaseDateMs: '1664533397000'
+                            originalPurchaseDate: '1664533397000'
+                            isTrialPeriod: 'false'
+                            inAppOwnershipType: PURCHASED
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Verify receipt apple success and response receipt apple data
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      environment: Production
+                      isRetryable: false
+                      latestReceipt: 0aW9uczFEMEIGA1UEAww7QX...
+                      status: 0
+                      receipt:
+                        receiptType: Production
+                        bundleId: com.rofi.plant.empires
+                        applicationVersion: '1'
+                        downloadId: '1660829050880450'
+                        versionExternalIdentifier: '852388116'
+                        requestDate: '1665484446099'
+                        receiptCreationDate: '1664533397000'
+                        originalPurchaseDate: '1660507316000'
+                        originalApplicationVersion: '1'
+                        inApp:
+                          - quantity: '1'
+                            productId: com.rofi.plant.empires.herochest4
+                            transactionId: '100001171740108'
+                            originalTransactionId: '100001171740108'
+                            purchaseDate: 2022-09-30 10:23:17 Etc/GMT
+                            purchaseDateMs: '1664533397000'
+                            originalPurchaseDate: '1664533397000'
+                            isTrialPeriod: 'false'
+                            inAppOwnershipType: PURCHASED
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error when call api Apple
+                  description: Server call api apple fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+                Verify Receipt Error Status:
+                  summary: Payment Verify Receipt Error with status code
+                  description: When call to api Apple, response status 21007
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error when call api Apple
+                  description: Server call api apple fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+                Verify Receipt Error Status:
+                  summary: Payment Verify Receipt Error with status code
+                  description: When call to api Apple, response status 21007
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error when call api Apple
+                  description: Server call api apple fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+                Verify Receipt Error Status:
+                  summary: Payment Verify Receipt Error with status code
+                  description: When call to api Apple, response status 21007
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /iap/receipts-verify/google:
+    post:
+      tags:
+        - IapPayments
+      summary: >-
+        [GAMESERVER] Checks the purchase and consumption status of an inapp item
+        with Google Store
+      operationId: VerifyReceiptGoogleAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptGoogleInputModel'
+            example:
+              packageName: com.rofi.plant.empires.paid
+              productId: com.rofi.plant.empires.paid.herochest2
+              tokenId: >-
+                12dlddiciogafkagomanagkboa.AO-J1OwkFhkyIPrzErPR6lACQZrSOWftl4dU3R_9le1-hpAnBemWz7gemST_7Oo56lNvKiTjY1CWu71OV2vxRYbWbJnK2PON2D5-qIHXQRGj34E1EA8_jNs
+              userId: null
+          text/json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptGoogleInputModel'
+            example:
+              packageName: com.rofi.plant.empires.paid
+              productId: com.rofi.plant.empires.paid.herochest2
+              tokenId: >-
+                12dlddiciogafkagomanagkboa.AO-J1OwkFhkyIPrzErPR6lACQZrSOWftl4dU3R_9le1-hpAnBemWz7gemST_7Oo56lNvKiTjY1CWu71OV2vxRYbWbJnK2PON2D5-qIHXQRGj34E1EA8_jNs
+              userId: null
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/VerifyReceiptGoogleInputModel'
+            example:
+              packageName: com.rofi.plant.empires.paid
+              productId: com.rofi.plant.empires.paid.herochest2
+              tokenId: >-
+                12dlddiciogafkagomanagkboa.AO-J1OwkFhkyIPrzErPR6lACQZrSOWftl4dU3R_9le1-hpAnBemWz7gemST_7Oo56lNvKiTjY1CWu71OV2vxRYbWbJnK2PON2D5-qIHXQRGj34E1EA8_jNs
+              userId: null
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      acknowledgementState: 1
+                      consumptionState: 1
+                      developerPayload: null
+                      kind: androidpublisher#productPurchase
+                      obfuscatedExternalAccountId: null
+                      obfuscatedExternalProfileId: null
+                      orderId: GPA.3315-6197-6887-*****
+                      productId: null
+                      purchaseState: 0
+                      purchaseTimeMillis: 16650462280892022
+                      purchaseToken: null
+                      purchaseType: null
+                      quantity: 1
+                      regionCode: VN
+                      eTag: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      acknowledgementState: 1
+                      consumptionState: 1
+                      developerPayload: null
+                      kind: androidpublisher#productPurchase
+                      obfuscatedExternalAccountId: null
+                      obfuscatedExternalProfileId: null
+                      orderId: GPA.3315-6197-6887-*****
+                      productId: null
+                      purchaseState: 0
+                      purchaseTimeMillis: 16650462280892022
+                      purchaseToken: null
+                      purchaseType: null
+                      quantity: 1
+                      regionCode: VN
+                      eTag: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      acknowledgementState: 1
+                      consumptionState: 1
+                      developerPayload: null
+                      kind: androidpublisher#productPurchase
+                      obfuscatedExternalAccountId: null
+                      obfuscatedExternalProfileId: null
+                      orderId: GPA.3315-6197-6887-*****
+                      productId: null
+                      purchaseState: 0
+                      purchaseTimeMillis: 16650462280892022
+                      purchaseToken: null
+                      purchaseType: null
+                      quantity: 1
+                      regionCode: VN
+                      eTag: null
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /iap/receipts/{orderId}:
+    post:
+      tags:
+        - IapPayments
+      operationId: CheckReceiptInfoAsync
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /notification/appstore:
+    post:
+      tags:
+        - Notification
+      summary: >-
+        Receive in-app purchase events in real time with server notifications
+        from the AppStore
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationAppleInputModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NotificationAppleInputModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NotificationAppleInputModel'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data: REFUND - OrderId123
+                SignedPayload Verify Error:
+                  summary: SignedPayload Verify Error
+                  description: SignedPayload not jwt format or verify fail
+                  value:
+                    code: 1001
+                    message: Failure verify notification from apple
+                    data: null
+                Process logic Error:
+                  summary: Process logic Error
+                  description: Received notification but fail when save data to db
+                  value:
+                    code: 1
+                    message: Error occurred
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data: REFUND - OrderId123
+                SignedPayload Verify Error:
+                  summary: SignedPayload Verify Error
+                  description: SignedPayload not jwt format or verify fail
+                  value:
+                    code: 1001
+                    message: Failure verify notification from apple
+                    data: null
+                Process logic Error:
+                  summary: Process logic Error
+                  description: Received notification but fail when save data to db
+                  value:
+                    code: 1
+                    message: Error occurred
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data: REFUND - OrderId123
+                SignedPayload Verify Error:
+                  summary: SignedPayload Verify Error
+                  description: SignedPayload not jwt format or verify fail
+                  value:
+                    code: 1001
+                    message: Failure verify notification from apple
+                    data: null
+                Process logic Error:
+                  summary: Process logic Error
+                  description: Received notification but fail when save data to db
+                  value:
+                    code: 1
+                    message: Error occurred
+                    data: null
+  /notification/googleplay:
+    post:
+      tags:
+        - Notification
+      summary: >-
+        Receive in-app purchase events in real time with server notifications
+        from the GooglePlay
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: string
+          text/json:
+            schema:
+              type: string
+          application/*+json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /users/receipts-verify/apple:
+    post:
+      tags:
+        - Payments
+      summary: '[USER] Send a receipt to the App Store for verification'
+      operationId: UserVerifyReceiptAppleAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserVerifyReceiptAppleInputModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserVerifyReceiptAppleInputModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserVerifyReceiptAppleInputModel'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Verify receipt apple success and response receipt apple data
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      environment: Production
+                      isRetryable: false
+                      latestReceipt: 0aW9uczFEMEIGA1UEAww7QX...
+                      status: 0
+                      receipt:
+                        receiptType: Production
+                        bundleId: com.rofi.plant.empires
+                        applicationVersion: '1'
+                        downloadId: '1660829050880450'
+                        versionExternalIdentifier: '852388116'
+                        requestDate: '1665484446099'
+                        receiptCreationDate: '1664533397000'
+                        originalPurchaseDate: '1660507316000'
+                        originalApplicationVersion: '1'
+                        inApp:
+                          - quantity: '1'
+                            productId: com.rofi.plant.empires.herochest4
+                            transactionId: '100001171740108'
+                            originalTransactionId: '100001171740108'
+                            purchaseDate: 2022-09-30 10:23:17 Etc/GMT
+                            purchaseDateMs: '1664533397000'
+                            originalPurchaseDate: '1664533397000'
+                            isTrialPeriod: 'false'
+                            inAppOwnershipType: PURCHASED
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Verify receipt apple success and response receipt apple data
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      environment: Production
+                      isRetryable: false
+                      latestReceipt: 0aW9uczFEMEIGA1UEAww7QX...
+                      status: 0
+                      receipt:
+                        receiptType: Production
+                        bundleId: com.rofi.plant.empires
+                        applicationVersion: '1'
+                        downloadId: '1660829050880450'
+                        versionExternalIdentifier: '852388116'
+                        requestDate: '1665484446099'
+                        receiptCreationDate: '1664533397000'
+                        originalPurchaseDate: '1660507316000'
+                        originalApplicationVersion: '1'
+                        inApp:
+                          - quantity: '1'
+                            productId: com.rofi.plant.empires.herochest4
+                            transactionId: '100001171740108'
+                            originalTransactionId: '100001171740108'
+                            purchaseDate: 2022-09-30 10:23:17 Etc/GMT
+                            purchaseDateMs: '1664533397000'
+                            originalPurchaseDate: '1664533397000'
+                            isTrialPeriod: 'false'
+                            inAppOwnershipType: PURCHASED
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Verify receipt apple success and response receipt apple data
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      environment: Production
+                      isRetryable: false
+                      latestReceipt: 0aW9uczFEMEIGA1UEAww7QX...
+                      status: 0
+                      receipt:
+                        receiptType: Production
+                        bundleId: com.rofi.plant.empires
+                        applicationVersion: '1'
+                        downloadId: '1660829050880450'
+                        versionExternalIdentifier: '852388116'
+                        requestDate: '1665484446099'
+                        receiptCreationDate: '1664533397000'
+                        originalPurchaseDate: '1660507316000'
+                        originalApplicationVersion: '1'
+                        inApp:
+                          - quantity: '1'
+                            productId: com.rofi.plant.empires.herochest4
+                            transactionId: '100001171740108'
+                            originalTransactionId: '100001171740108'
+                            purchaseDate: 2022-09-30 10:23:17 Etc/GMT
+                            purchaseDateMs: '1664533397000'
+                            originalPurchaseDate: '1664533397000'
+                            isTrialPeriod: 'false'
+                            inAppOwnershipType: PURCHASED
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error when call api Apple
+                  description: Server call api apple fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+                Verify Receipt Error Status:
+                  summary: Payment Verify Receipt Error with status code
+                  description: When call to api Apple, response status 21007
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error when call api Apple
+                  description: Server call api apple fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+                Verify Receipt Error Status:
+                  summary: Payment Verify Receipt Error with status code
+                  description: When call to api Apple, response status 21007
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error when call api Apple
+                  description: Server call api apple fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+                Verify Receipt Error Status:
+                  summary: Payment Verify Receipt Error with status code
+                  description: When call to api Apple, response status 21007
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /users/receipts-verify/google:
+    post:
+      tags:
+        - Payments
+      summary: >-
+        [USER] Checks the purchase and consumption status of an inapp item with
+        Google Store
+      operationId: UserVerifyReceiptGoogleAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserVerifyReceiptGoogleInputModel'
+            example:
+              packageName: com.rofi.plant.empires.paid
+              productId: com.rofi.plant.empires.paid.herochest2
+              tokenId: >-
+                12dlddiciogafkagomanagkboa.AO-J1OwkFhkyIPrzErPR6lACQZrSOWftl4dU3R_9le1-hpAnBemWz7gemST_7Oo56lNvKiTjY1CWu71OV2vxRYbWbJnK2PON2D5-qIHXQRGj34E1EA8_jNs
+              userId: null
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UserVerifyReceiptGoogleInputModel'
+            example:
+              packageName: com.rofi.plant.empires.paid
+              productId: com.rofi.plant.empires.paid.herochest2
+              tokenId: >-
+                12dlddiciogafkagomanagkboa.AO-J1OwkFhkyIPrzErPR6lACQZrSOWftl4dU3R_9le1-hpAnBemWz7gemST_7Oo56lNvKiTjY1CWu71OV2vxRYbWbJnK2PON2D5-qIHXQRGj34E1EA8_jNs
+              userId: null
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UserVerifyReceiptGoogleInputModel'
+            example:
+              packageName: com.rofi.plant.empires.paid
+              productId: com.rofi.plant.empires.paid.herochest2
+              tokenId: >-
+                12dlddiciogafkagomanagkboa.AO-J1OwkFhkyIPrzErPR6lACQZrSOWftl4dU3R_9le1-hpAnBemWz7gemST_7Oo56lNvKiTjY1CWu71OV2vxRYbWbJnK2PON2D5-qIHXQRGj34E1EA8_jNs
+              userId: null
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      acknowledgementState: 1
+                      consumptionState: 1
+                      developerPayload: null
+                      kind: androidpublisher#productPurchase
+                      obfuscatedExternalAccountId: null
+                      obfuscatedExternalProfileId: null
+                      orderId: GPA.3315-6197-6887-*****
+                      productId: null
+                      purchaseState: 0
+                      purchaseTimeMillis: 16650462280892022
+                      purchaseToken: null
+                      purchaseType: null
+                      quantity: 1
+                      regionCode: VN
+                      eTag: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      acknowledgementState: 1
+                      consumptionState: 1
+                      developerPayload: null
+                      kind: androidpublisher#productPurchase
+                      obfuscatedExternalAccountId: null
+                      obfuscatedExternalProfileId: null
+                      orderId: GPA.3315-6197-6887-*****
+                      productId: null
+                      purchaseState: 0
+                      purchaseTimeMillis: 16650462280892022
+                      purchaseToken: null
+                      purchaseType: null
+                      quantity: 1
+                      regionCode: VN
+                      eTag: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Success:
+                  summary: Success
+                  description: Received notification and save data succeed
+                  value:
+                    code: 0
+                    message: Success
+                    data:
+                      acknowledgementState: 1
+                      consumptionState: 1
+                      developerPayload: null
+                      kind: androidpublisher#productPurchase
+                      obfuscatedExternalAccountId: null
+                      obfuscatedExternalProfileId: null
+                      orderId: GPA.3315-6197-6887-*****
+                      productId: null
+                      purchaseState: 0
+                      purchaseTimeMillis: 16650462280892022
+                      purchaseToken: null
+                      purchaseType: null
+                      quantity: 1
+                      regionCode: VN
+                      eTag: null
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /xsolla/authentication-token:
+    post:
+      tags:
+        - Xsolla
+      operationId: Create authentication token for payment Xsolla
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateXsollaTokenModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateXsollaTokenModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateXsollaTokenModel'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+  /xsolla/notification:
+    post:
+      tags:
+        - Xsolla
+      operationId: Recevie payment result from Xsolla
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Verify Receipt Error:
+                  summary: Payment Verify Receipt Error
+                  description: Get product from Google Store fail
+                  value:
+                    code: 1000
+                    message: Failure verify receipt
+                    data: null
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          nullable: true
+        data:
+          nullable: true
+      additionalProperties: false
+    ConfigRefundToGameRequest:
+      type: object
+      properties:
+        gameCode:
+          type: string
+          nullable: true
+        api:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreateKeyDepositSubmissionModel:
+      required:
+        - amount
+        - clientIp
+        - currency
+        - dateTime
+        - orderId
+      type: object
+      properties:
+        orderId:
+          minLength: 1
+          type: string
+        currency:
+          minLength: 1
+          type: string
+        amount:
+          minLength: 1
+          type: string
+        dateTime:
+          minLength: 1
+          type: string
+          description: Datetime as UTC and format YYYY-MM-DD hh:mm:sstt
+        clientIp:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    CreateXsollaTokenModel:
+      required:
+        - email
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        email:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    ImportReceiptRequest:
+      type: object
+      properties:
+        orderId:
+          type: string
+          nullable: true
+        packageName:
+          type: string
+          nullable: true
+        productId:
+          type: string
+          nullable: true
+        iapTypeId:
+          type: integer
+          format: int32
+        gameCode:
+          type: string
+          nullable: true
+        purchaseToken:
+          type: string
+          nullable: true
+        purchaseDateTimeStamp:
+          type: string
+          nullable: true
+        quantity:
+          type: integer
+          format: int32
+          nullable: true
+        money:
+          type: number
+          format: float
+          nullable: true
+        userId:
+          type: string
+          nullable: true
+        isRefund:
+          type: boolean
+        moreInfo:
+          type: string
+          nullable: true
+        purchaseState:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          nullable: true
+        updateAt:
+          type: string
+          nullable: true
+      additionalProperties: false
+    NotificationAppleInputModel:
+      required:
+        - signedPayload
+      type: object
+      properties:
+        signedPayload:
+          minLength: 1
+          type: string
+          description: >-
+            A cryptographically signed by the App Store according to the JSON
+            Web Signature (JWS) IETF RFC 7515 specification
+      additionalProperties: false
+    UserVerifyReceiptAppleInputModel:
+      required:
+        - gameCode
+        - receiptData
+      type: object
+      properties:
+        receiptData:
+          minLength: 1
+          type: string
+          description: The Base64-encoded receipt data
+        gameCode:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    UserVerifyReceiptGoogleInputModel:
+      required:
+        - gameCode
+        - packageName
+        - productId
+        - tokenId
+      type: object
+      properties:
+        packageName:
+          minLength: 1
+          type: string
+        productId:
+          minLength: 1
+          type: string
+        tokenId:
+          minLength: 1
+          type: string
+        gameCode:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    VerifyReceiptAppleInputModel:
+      required:
+        - receiptData
+      type: object
+      properties:
+        receiptData:
+          minLength: 1
+          type: string
+          description: The Base64-encoded receipt data
+        userId:
+          type: string
+          description: RoFi Id
+          nullable: true
+      additionalProperties: false
+    VerifyReceiptGoogleInputModel:
+      required:
+        - packageName
+        - productId
+        - tokenId
+      type: object
+      properties:
+        packageName:
+          minLength: 1
+          type: string
+        productId:
+          minLength: 1
+          type: string
+        tokenId:
+          minLength: 1
+          type: string
+        userId:
+          type: string
+          description: RoFi Id
+          nullable: true
+      additionalProperties: false
